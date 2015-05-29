@@ -1,0 +1,25 @@
+{
+  "name": "reviver-buffer",
+  "version": "0.0.0",
+  "description": "Restore a Buffer from JSON (use with JSON.parse)",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jprichardson/reviver-buffer.git"
+  },
+  "keywords": [
+    "JSON",
+    "parse",
+    "buffer",
+    "reviver"
+  ],
+  "author": "JP Richardson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jprichardson/reviver-buffer/issues"
+  },
+  "homepage": "https://github.com/jprichardson/reviver-buffer#readme"
+}

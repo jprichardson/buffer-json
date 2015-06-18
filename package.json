@@ -1,6 +1,6 @@
 {
   "name": "buffer-json",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Restore a Buffer from JSON (use with JSON.parse) or serialize a Buffer to JSON.",
   "main": "index.js",
   "scripts": {

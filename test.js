@@ -12,7 +12,7 @@ describe('buffer-json', function () {
 
   describe('reviver()', function () {
     fixtures.valid.forEach(function (f) {
-      it('should convert ' + f.value, function () {
+      it('should convert ' + f.utf8, function () {
         // verify fixture is correct
         var b = new Buffer(f.utf8)
         assert.deepEqual(b.toJSON(), f.json)
@@ -21,6 +21,11 @@ describe('buffer-json', function () {
         assert.strictEqual(b.toString('utf8'), b2.toString('utf8'))
         assert.strictEqual(b.toString('hex'), b2.toString('hex'))
         assert.strictEqual(b.toString('base64'), b2.toString('base64'))
+
+        var b3 = JSON.parse(JSON.stringify(f.json2), reviver)
+        assert.strictEqual(b3.toString('utf8'), b2.toString('utf8'))
+        assert.strictEqual(b3.toString('hex'), b2.toString('hex'))
+        assert.strictEqual(b3.toString('base64'), b2.toString('base64'))
       })
     })
   })

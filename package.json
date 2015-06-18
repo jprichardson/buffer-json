@@ -1,14 +1,14 @@
 {
-  "name": "buffer-json-reviver",
+  "name": "buffer-json",
   "version": "0.0.0",
-  "description": "Restore a Buffer from JSON (use with JSON.parse)",
+  "description": "Restore a Buffer from JSON (use with JSON.parse) or serialize a Buffer to JSON.",
   "main": "index.js",
   "scripts": {
     "test": "standard && mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jprichardson/buffer-json-reviver.git"
+    "url": "git+https://github.com/jprichardson/buffer-json.git"
   },
   "keywords": [
     "JSON",
@@ -19,9 +19,9 @@
   "author": "JP Richardson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jprichardson/buffer-json-reviver/issues"
+    "url": "https://github.com/jprichardson/buffer-json/issues"
   },
-  "homepage": "https://github.com/jprichardson/buffer-json-reviver#readme",
+  "homepage": "https://github.com/jprichardson/buffer-json#readme",
   "devDependencies": {
     "semver": "^4.3.4"
   }

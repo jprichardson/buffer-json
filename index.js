@@ -1,4 +1,13 @@
 
+// Buffer to JSON
+function bufferReplacer (key, val) {
+  if (val.type !== 'Buffer') return val
+  if (!Array.isArray(val.data)) return val
+  val.data = val.data.length ? 'base64:' + new Buffer(val.data).toString('base64') : ''
+  return val
+}
+
+// JSON to Buffer
 function bufferReviver (key, val) {
   if (val.type !== 'Buffer') return val
   if (Array.isArray(val.data)) {
@@ -18,4 +27,7 @@ function bufferReviver (key, val) {
   }
 }
 
-module.exports = bufferReviver
+module.exports = {
+  replacer: bufferReplacer,
+  reviver: bufferReviver
+}

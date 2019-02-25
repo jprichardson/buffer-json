@@ -1,10 +1,10 @@
 {
   "name": "buffer-json",
   "version": "1.0.0",
-  "description": "Restore a Buffer from JSON (use with JSON.parse) or serialize a Buffer to JSON.",
+  "description": "JSON.stringify & JSON.parse which can encode/decode buffers.",
   "main": "index.js",
   "scripts": {
-    "test": "standard && mocha"
+    "test": "standard --fix && node test.js"
   },
   "repository": {
     "type": "git",
@@ -13,8 +13,11 @@
   "keywords": [
     "JSON",
     "parse",
+    "stringify",
     "buffer",
-    "reviver"
+    "reviver",
+    "replacer",
+    "base64"
   ],
   "author": "JP Richardson",
   "license": "MIT",
@@ -23,6 +26,7 @@
   },
   "homepage": "https://github.com/jprichardson/buffer-json#readme",
   "devDependencies": {
-    "semver": "^4.3.4"
+    "standard": "^12.0.1",
+    "tape": "^4.10.1"
   }
 }

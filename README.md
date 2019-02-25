@@ -1,74 +1,53 @@
-buffer-json
-===========
+# buffer-json
 
-A JavaScript component to be used in conjunction with `JSON.parse` to restore
-a `Buffer` JSON representation back to a `Buffer` instance. Can also be used
-in conjunction with `JSON.stringify` to compact the array that `Buffer.prototype.toJSON()`
-creates.
-
-
-Note to Node v0.10 users!
--------------------------
-
-The `replacer` function will not work for you. This is because in Node `v0.10`
-the here's the output of the following:
-
-** Node v0.10: **
-
-```js
-console.dir(JSON.stringify(new Buffer('hello')))
-// => '[104,101,108,108,111]'
+```
+npm install buffer-json
 ```
 
-** Node v0.11, v0.12, IO.js: **
-
 ```js
-console.dir(JSON.stringify(new Buffer('hello')))
-// => '{"type":"Buffer","data":[104,101,108,108,111]}'
+const BJSON = require('buffer-json')
+
+const str = BJSON.stringify({ buf: Buffer.from('hello') })
+// => '{"buf":{"type":"Buffer","data":"base64:aGVsbG8="}}'
+
+BJSON.parse(str)
+// => { buf: <Buffer 68 65 6c 6c 6f> }
 ```
 
-Why?
-----
+The [`Buffer`](https://nodejs.org/api/buffer.html#buffer_buffer) class in Node.js is used to represent binary data. JSON does not specify a way to encode binary data, so the Node.js implementation of `JSON.stringify` represents buffers as an object of shape `{ type: "Buffer", data: [<bytes as numbers>] }`. Unfortunately, `JSON.parse` does not turn this structure back into a `Buffer` object:
 
-So why would you use this module? You would use it because you don't like serializing
-your buffers to arrays.
-
-```js
-// without this module
-console.dir(JSON.stringify(new Buffer('hello')))
-// => '{"type":"Buffer","data":[104,101,108,108,111]}'
-
-// with this module
-var bufferJson = require('buffer-json')
-
-console.dir(JSON.stringify(new Buffer('hello'), bufferJson.replacer))
-// => '{"type":"Buffer","data":"base64:aGVsbG8="}'
+```
+$ node
+> JSON.parse(JSON.stringify({ buf: Buffer.from('hello world') }))
+{ buf:
+   { type: 'Buffer',
+     data: [ 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100 ] } }
 ```
 
-As you can see, in most cases, `base64` encoding would be more efficient than arrays.
+`JSON.stringify` and `JSON.parse` accept arguments called [`replacer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#The_replacer_parameter) and [`reviver`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Using_the_reviver_parameter) respectively which allow customizing the parsing/encoding behavior. This module provides a replacer which encodes Buffer data as a base64-encoded string, and a reviver which turns JSON objects which contain buffer-like data (either as arrays of numbers or strings) into `Buffer` instances. All other types of values are parsed/encoded as normal.
 
+## API
 
-API
----
+### `stringify(value[, space])`
 
-### reviver
+Convenience wrapper for [`JSON.stringify`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) with the `replacer` described below.
 
-Restores Buffer from JSON.
+### `parse(text)`
 
+Convenience wrapper for [`JSON.parse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse) with the `reviver` described below.
 
-### replacer
+### `replacer(key, value)`
 
-Helps convert Buffer to JSON.
+A [`replacer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#The_replacer_parameter) implementation which turns every value that is a `Buffer` instance into an object of shape `{ type: 'Buffer', data: 'base64:<base64-encoded buffer content>' }`. Empty buffers are encoded as `{ type: 'Buffer', data: '' }`.
 
+### `reviver(key, value)`
 
-License
--------
+A [`reviver`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Using_the_reviver_parameter) implementation which turns every object of shape `{ type: 'Buffer', data: <array of numbers or string> }` into a `Buffer` instance.
+
+## Related modules
+
+- [`buffer-json-encoding`](https://github.com/lachenmayer/buffer-json-encoding): an [`abstract-encoding`](https://github.com/mafintosh/abstract-encoding) compatible JSON encoder/decoder which uses this module.
+
+## License
 
 MIT
-
-
-
-
-
-
-

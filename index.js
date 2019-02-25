@@ -1,33 +1,60 @@
-
-// Buffer to JSON
-function bufferReplacer (key, val) {
-  if (val.type !== 'Buffer') return val
-  if (!Array.isArray(val.data)) return val
-  val.data = val.data.length ? 'base64:' + new Buffer(val.data).toString('base64') : ''
-  return val
+function stringify (value, space) {
+  return JSON.stringify(value, replacer, space)
 }
 
-// JSON to Buffer
-function bufferReviver (key, val) {
-  if (val.type !== 'Buffer') return val
-  if (Array.isArray(val.data)) {
-    return new Buffer(val.data)
-  } else if (typeof val.data === 'string') {
-    if (!val.data) return new Buffer('')
-    var pos = val.data.indexOf(':')
-    // assume maybe utf8?
-    if (pos <= 0) return new Buffer(val.data)
-    var type = val.data.slice(0, pos)
-    // only support base64 for now
-    switch (type) {
-      case 'base64': return new Buffer(val.data.slice(pos + 1), 'base64')
+function parse (text) {
+  return JSON.parse(text, reviver)
+}
+
+function replacer (key, value) {
+  if (isBufferLike(value)) {
+    if (isArray(value.data)) {
+      if (value.data.length > 0) {
+        value.data = 'base64:' + Buffer.from(value.data).toString('base64')
+      } else {
+        value.data = ''
+      }
     }
-  } else {
-    throw new Error('buffer-json.reviver: unknown Buffer type')
   }
+  return value
+}
+
+function reviver (key, value) {
+  if (isBufferLike(value)) {
+    if (isArray(value.data)) {
+      return Buffer.from(value.data)
+    } else if (isString(value.data)) {
+      if (value.data.startsWith('base64:')) {
+        return Buffer.from(value.data.slice('base64:'.length), 'base64')
+      }
+      // Assume that the string is UTF-8 encoded (or empty).
+      return Buffer.from(value.data)
+    }
+  }
+  return value
+}
+
+function isBufferLike (x) {
+  return (
+    isObject(x) && x.type === 'Buffer' && (isArray(x.data) || isString(x.data))
+  )
+}
+
+function isArray (x) {
+  return Array.isArray(x)
+}
+
+function isString (x) {
+  return typeof x === 'string'
+}
+
+function isObject (x) {
+  return typeof x === 'object' && x !== null
 }
 
 module.exports = {
-  replacer: bufferReplacer,
-  reviver: bufferReviver
+  stringify,
+  parse,
+  replacer,
+  reviver
 }

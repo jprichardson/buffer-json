@@ -1,6 +1,6 @@
 {
   "name": "buffer-json",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "JSON.stringify & JSON.parse which can encode/decode buffers.",
   "main": "index.js",
   "scripts": {
